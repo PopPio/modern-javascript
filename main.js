@@ -1,47 +1,42 @@
 'use strict';
-// const user = {
-//     name: 'John',
-//     email: 'john@example.com'
-// };
 
-// function init(name, isTrue) {
-//     document.getElementById('output').innerHTML = `${user.name} ${user.email}`
-// }
-
-// const init = (name, isTrue) => {
-//     document.getElementById('output').innerHTML = `${user.name} ${user.email}`
-// }
-// init()
-// function nameString() {
-//     return `${user.name} ${user.email}`;
-// }
-// const nameString = name => `${name} ${user.email}`
-//
-// document.getElementById('output').innerHTML = nameString('Pop');
-
-let users = [
-    {
-        name: 'Andrew',
-        email: 'andrew@example.com'
-    },
-    {
-        name: 'Ashley',
-        email: 'ashley@example.com'
-    }
-]
-
-let names = [];
-
-users.forEach(user => names.push(user.name))
-
-document.getElementById('output').innerHTML = names.join(', ');
-
-document.getElementById('btn').addEventListener('click', (e) => {
-    // console.log(this)
-    const getDetails = () => {
-        console.log(e.currentTarget)
-        return `The button id is ${e.currentTarget.getAttribute('id')}`
+class Item {
+    constructor(name, category) {
+        this.name = name;
+        this.category = category;
     }
 
-    document.getElementById('output').innerHTML = getDetails()
-});
+    static maxItems = 10;
+
+    static getHelperText() {
+        return `You can only add ${Item.maxItems} items.`;
+    }
+
+    getDetails() {
+        return `${this.name} - ${this.category}`;
+    }
+}
+
+class PurchaseItem extends Item {
+    constructor(name, category, price) {
+        super(name, category);
+        this.price = price;
+    }
+
+    getDetailsWithPrice() {
+        return `${super.getDetails()} - $${this.price}`;
+    }
+
+    static getNumberOfItems() {
+        return `3 / ${super.maxItems}`;
+    }
+}
+
+let coffee = new Item('coffee', 'food');
+coffee.category = 'drink'
+
+let purchaseItem = new PurchaseItem('bread', 'food', 2.49);
+
+// document.getElementById('output').innerHTML = purchaseItem.getDetailsWithPrice();
+// document.getElementById('output').innerHTML = Item.getHelperText();
+document.getElementById('output').innerHTML = PurchaseItem.getNumberOfItems();
