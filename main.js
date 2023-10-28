@@ -1,42 +1,41 @@
 'use strict';
 
-class Item {
-    constructor(name, category) {
-        this.name = name;
-        this.category = category;
-    }
+let myPromise = new Promise((resolve, reject) => {
+    // call an API
+    let user = {
+        name: 'John',
+        email: 'john@example.com'
+    };
 
-    static maxItems = 10;
+    setTimeout(() => {
+        resolve(user);
+        // reject('Sorry, could not retrieve the user.')
+    }, 2000);
+})
 
-    static getHelperText() {
-        return `You can only add ${Item.maxItems} items.`;
-    }
+const getAdditionalUserData = (user) => {
+    document.getElementById('output').innerHTML = `${user.name} (${user.email})`;
 
-    getDetails() {
-        return `${this.name} - ${this.category}`;
-    }
-}
+    return new Promise((resolve, reject) => {
+        // calling another API to get more user data
+        user.favoriteColor = 'blue';
+        user.currentDrink = 'La Croix';
 
-class PurchaseItem extends Item {
-    constructor(name, category, price) {
-        super(name, category);
-        this.price = price;
-    }
+        setTimeout(() => resolve(user), 2000);
+    });
+};
 
-    getDetailsWithPrice() {
-        return `${super.getDetails()} - $${this.price}`;
-    }
+// myPromise.then((user) => {
+//     document.getElementById('output').innerHTML = `${user.name} (${user.email})`;
+// }).catch((error) => {
+//     document.getElementById('output').innerHTML = error;
+// });
 
-    static getNumberOfItems() {
-        return `3 / ${super.maxItems}`;
-    }
-}
+myPromise.then(getAdditionalUserData)
+    .then((user) => {
+        document.getElementById('output').innerHTML = `${user.name} (${user.email}) likes ${user.favoriteColor} and drinks ${user.currentDrink}`;
+    }).catch((error) => {
+        document.getElementById('output').innerHTML = error;
+    });
 
-let coffee = new Item('coffee', 'food');
-coffee.category = 'drink'
-
-let purchaseItem = new PurchaseItem('bread', 'food', 2.49);
-
-// document.getElementById('output').innerHTML = purchaseItem.getDetailsWithPrice();
-// document.getElementById('output').innerHTML = Item.getHelperText();
-document.getElementById('output').innerHTML = PurchaseItem.getNumberOfItems();
+document.getElementById('output').innerHTML = 'Loading...';
